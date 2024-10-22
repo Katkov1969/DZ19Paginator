@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Блог</title>
+
+</head>
+<body>
+    <h1>Список постов</h1>
+    <!-- Форма для выбора количества постов на странице -->
+    <form method="get">
+        <label for="per_page">Постов на странице:</label>
+        <select name="per_page" id="per_page" onchange="this.form.submit()">
+            <option value="5" {% if per_page == '5' %}selected{% endif %}>5</option>
+            <option value="10" {% if per_page == '10' %}selected{% endif %}>10</option>
+            <option value="20" {% if per_page == '20' %}selected{% endif %}>20</option>
+        </select>
+        <noscript><input type="submit" value="Применить"></noscript>
+    </form>
+
+
+    <ul>
+        {% for post in posts %}
+            <li>
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.content|truncatewords:30 }}</p>
+                <small>Дата публикации: {{ post.pub_date }}</small>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Пагинация -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if posts.has_previous %}
+                <a href="?page=1">&laquo; первая</a>
+                <a href="?page={{ posts.previous_page_number }}">предыдущая</a>
+            {% endif %}
+
+            <span class="current">
+                Страница {{ posts.number }} из {{ posts.paginator.num_pages }}.
+            </span>
+
+            {% if posts.has_next %}
+                <a href="?page={{ posts.next_page_number }}">следующая</a>
+                <a href="?page={{ posts.paginator.num_pages }}">последняя &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</body>
+</html>
